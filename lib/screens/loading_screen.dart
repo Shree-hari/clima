@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:clima/services/location.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-
+String apiKey = '6e30ea19180322e52a03bd28c6bcb3c6';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -11,19 +12,30 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
 
+  double longitude ,latitude;
+
   void getLocation() async {
 
     Location location = Location();
     await location.getCurrentLocation();
-    print(location.longitude);
-    print(location.latitude);
+    longitude = location.longitude;
+    latitude = location.latitude;
+
+    getData();
   }
 
   void getData() async {
-    http.Response response = await http.get('https://samples.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=b6907d289e10d714a6e88b30761fae22');
+    http.Response response = await http.get('https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey');
 
     if (response.statusCode == 200){
-      print(response.body);
+      String data = response.body;
+      var decodedData = jsonDecode(data);
+      int condition = decodedData['weather'][0]['id'];
+      String cityData = decodedData['name'];
+      double temprature = decodedData['main']['temp'];
+      print(condition);
+      print(cityData);
+      print(temprature);
     }
     else {
       print(response.statusCode);

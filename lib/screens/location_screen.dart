@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
 
-
 class LocationScreen extends StatefulWidget {
   @override
   _LocationScreenState createState() => _LocationScreenState();
@@ -75,7 +74,6 @@ class _LocationScreenState extends State<LocationScreen> {
     );
   }
 }
-
 
 //int condition = decodedData['weather'][0]['id'];
 //String cityData = decodedData['name'];

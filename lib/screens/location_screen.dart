@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
+import 'package:clima/services/weather.dart';
 
 class LocationScreen extends StatefulWidget {
-
   LocationScreen({this.locationWeather});
-  final locationWeather ;
+  final locationWeather;
 
   @override
   _LocationScreenState createState() => _LocationScreenState();
 }
 
 class _LocationScreenState extends State<LocationScreen> {
-
-  int condition;
+  WeatherModel weather = WeatherModel();
+  String weatherIcon;
   String cityData;
   int temprature;
+  String weatherMessage;
 
   @override
   void initState() {
@@ -23,11 +24,14 @@ class _LocationScreenState extends State<LocationScreen> {
     updateUI(widget.locationWeather);
   }
 
-  void updateUI(dynamic weatherData){
-    condition = weatherData['weather'][0]['id'];
-    cityData = weatherData['name'];
-    temprature = weatherData['main']['temp'];
-    print(temprature);
+  void updateUI(dynamic weatherData) {
+    setState(() {
+      var condition = weatherData['weather'][0]['id'];
+      cityData = weatherData['name'];
+      temprature = weatherData['main']['temp'];
+      weatherIcon = weather.getWeatherIcon(condition);
+      weatherMessage = weather.getMessage(condition);
+    });
   }
 
   @override
@@ -76,7 +80,7 @@ class _LocationScreenState extends State<LocationScreen> {
                       style: kTempTextStyle,
                     ),
                     Text(
-                      '☀️',
+                      weatherIcon,
                       style: kConditionTextStyle,
                     ),
                   ],
@@ -85,7 +89,7 @@ class _LocationScreenState extends State<LocationScreen> {
               Padding(
                 padding: EdgeInsets.only(right: 15.0),
                 child: Text(
-                  "It's 🍦 time in $cityData!",
+                  "$weatherMessage in $cityData!",
                   textAlign: TextAlign.right,
                   style: kMessageTextStyle,
                 ),
@@ -97,5 +101,3 @@ class _LocationScreenState extends State<LocationScreen> {
     );
   }
 }
-
-
